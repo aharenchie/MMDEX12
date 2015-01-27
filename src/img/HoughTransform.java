@@ -2,10 +2,10 @@ package img;
 
 public class HoughTransform {
 	
-	public static int OBJECT_NUM = 3;
-	public static int[] pre_r = new int[OBJECT_NUM];
-	public static int[] pre_c_x = new int[OBJECT_NUM];
-	public static int[] pre_c_y = new int[OBJECT_NUM];
+	public static int OBJECT_NUM = 0;
+	public static int[] pre_r = new int[255];
+	public static int[] pre_c_x = new int[255];
+	public static int[] pre_c_y = new int[255];
 	 
 	public static int[] run(int[] c,int w,int h){
 		int XMAX = w;
@@ -48,25 +48,24 @@ public class HoughTransform {
 	           	}
 		 }
 		 
-		 boolean flag;
+		 boolean flag = true;
 		 
-		 for(int i=0;i <OBJECT_NUM;i++){	
+		 while(flag){	
 			 
 	         counter_max=0;   
-	         flag = true;
 	         
 	         for(int c_y = 0;c_y < YMAX;c_y++){
 	        	 for(int c_x = 0;c_x < XMAX;c_x++){
 	        		 for(r = 0;r < RMAX;r++){
 	        			 
-	        			if(i == 0 && counter_max < counter[c_y][c_x][r]){
+	        			if(OBJECT_NUM == 0 && counter_max < counter[c_y][c_x][r]){
 	        				counter_max = counter[c_y][c_x][r];
 	        				c_xmax = c_x;
 	        				c_ymax = c_y;
 	        				rmax = r;		
 	        			}else if(counter_max < counter[c_y][c_x][r] ){
 	      
-	        				for(int j = 0; j < i;j++)
+	        				for(int j = 0; j < OBJECT_NUM;j++)
 	        					if(Math.abs(pre_c_x[j] - c_x) < 5 && Math.abs(pre_c_y[j] - c_y) < 5 )
 	        						flag = false;
 	        				
@@ -79,25 +78,23 @@ public class HoughTransform {
 	        			}
 	        			
 	        		 }					
-	        	 }	        		 
+	        	 } 	 
 	        }
 	         
-	         pre_c_x[i] = c_xmax;
-	         pre_c_y[i] = c_ymax;	         
-	         pre_r[i] = rmax;
+	         pre_c_x[OBJECT_NUM] = c_xmax;
+	         pre_c_y[OBJECT_NUM] = c_ymax;	         
+	         pre_r[OBJECT_NUM] = rmax;
 	         
+	         if(counter_max < 140){
+	        	 flag = false;
+	         }else{
+	        	 flag = true;
+	        	 OBJECT_NUM++;
+	             System.out.println("---"+OBJECT_NUM+"個目---" );
+		         System.out.println("("+c_xmax+","+ c_ymax +")");
+	         }
 	        
-	         System.out.println("---------------");
-	         System.out.println(c_xmax);
-	         System.out.println(c_ymax);
-	         System.out.println(rmax);
-	         System.out.println(counter_max);
-	
 		 }
-		
-
-	
-		//new_c[w*c_ymax+c_xmax] = Formatter.rgb(255,0,0);
 		
 		return new_c;
 	}
