@@ -15,11 +15,15 @@ public class ObjectDetection extends Applet{
 	BufferedImage bimg; //入力画像
 	BufferedImage new_img;//出力画像
 	
+
+	HoughTransform htf;
+	
 	int w,h;
 	int c;
 	
 	public void init(){
 		
+		//img = getImage(getCodeBase(),"./pic/sample1.png");
 		img = getImage(getCodeBase(),"./pic/写真.JPG");
 					
 		MediaTracker mt = new MediaTracker(this);
@@ -36,7 +40,7 @@ public class ObjectDetection extends Applet{
 		w = bimg.getWidth();
 		h = bimg.getHeight();
 		
-		
+
 		main();
 	}
 	
@@ -50,14 +54,15 @@ public class ObjectDetection extends Applet{
 		//出力画像のために、新しいBufferedImageを生成
 		new_img= new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		
+		c = translateRGB.ToneCurve(c, w, h);
 		/*カラー画像をグレイ化する*/
 		c = translateRGB.ToGlay(c,w,h);
-		
-		//c = translateRGB.ToneCurve(c, w, h);
+	
 		/*エッジ検出*/
-		//c = CreateLine.sobelFilter(c,w,h);		
+		c = CreateLine.sobelFilter(c,w,h);
 		
-		new_c = HoughTransform.run(c, w, h);
+		htf = new HoughTransform();
+		new_c = htf.run(c, w, h);
 		
 		new_c = c;
 		//計算結果をセットする
@@ -78,18 +83,16 @@ public class ObjectDetection extends Applet{
 	}
 	
 	public void paint(Graphics g){
+		int x,y,r;
 		g.drawImage(new_img, 0, 0, this);
-		g.setColor(Color.blue);
-		/*
-		g.drawOval(522-23,228-23,23*2,23*2);
-		g.drawOval(564-29,564-29,29*2,29*2);
+		g.setColor(Color.red);
 		
-		g.drawOval(334-28,334-28,28*2,28*2);
-		g.drawOval(354-28,212-28,28*2,28*2);
-	*/
-		g.drawOval(522-22,229-22,22*2,22*2);
-		g.drawOval(564-29,563-29,29*2,29*2);
+		for(int i = 0;i <htf.OBJECT_NUM;i++){
+			x = htf.pre_c_x[i];
+			y = htf.pre_c_y[i];
+			r = htf.pre_r[i];
+			g.fillOval(x,y,5,5);
+		}
 		
-	
 	}
 }

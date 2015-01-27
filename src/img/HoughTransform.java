@@ -2,6 +2,11 @@ package img;
 
 public class HoughTransform {
 	
+	public static int OBJECT_NUM = 3;
+	public static int[] pre_r = new int[OBJECT_NUM];
+	public static int[] pre_c_x = new int[OBJECT_NUM];
+	public static int[] pre_c_y = new int[OBJECT_NUM];
+	 
 	public static int[] run(int[] c,int w,int h){
 		int XMAX = w;
 		int YMAX = h;
@@ -43,11 +48,6 @@ public class HoughTransform {
 	           	}
 		 }
 		 
-		 
-		 int OBJECT_NUM = 3;
-		 int[] pre_counter_max = new int[OBJECT_NUM];
-		 int[] pre_c_x = new int[OBJECT_NUM];
-		 int[] pre_c_y = new int[OBJECT_NUM];
 		 boolean flag;
 		 
 		 for(int i=0;i <OBJECT_NUM;i++){	
@@ -84,18 +84,19 @@ public class HoughTransform {
 	         
 	         pre_c_x[i] = c_xmax;
 	         pre_c_y[i] = c_ymax;	         
-	         pre_counter_max[i] = counter_max;
+	         pre_r[i] = rmax;
 	         
 	        
 	         System.out.println("---------------");
 	         System.out.println(c_xmax);
 	         System.out.println(c_ymax);
 	         System.out.println(rmax);
-	        
+	         System.out.println(counter_max);
 	
 		 }
-	     System.out.println("終わり");
 		
+
+	
 		//new_c[w*c_ymax+c_xmax] = Formatter.rgb(255,0,0);
 		
 		return new_c;
