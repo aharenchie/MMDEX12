@@ -13,17 +13,14 @@ public class ObjectDetection extends Applet{
 	Image img;
 	
 	BufferedImage bimg; //入力画像
-	BufferedImage new_img;//出力画像
-	
 
-	HoughTransform htf;
+	HoughTransformCircles htf;
 	
 	int w,h;
 	int c;
 	
 	public void init(){
-		
-		//img = getImage(getCodeBase(),"./pic/sample1.png");
+
 		img = getImage(getCodeBase(),"./pic/写真.JPG");
 					
 		MediaTracker mt = new MediaTracker(this);
@@ -40,7 +37,6 @@ public class ObjectDetection extends Applet{
 		w = bimg.getWidth();
 		h = bimg.getHeight();
 		
-
 		main();
 	}
 	
@@ -50,23 +46,22 @@ public class ObjectDetection extends Applet{
 		 
 		//入力画像の画素値を配列で取得
 		c = bimg.getRGB(0,0,w,h,null,0,w);
-			
-		//出力画像のために、新しいBufferedImageを生成
-		new_img= new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+		/*エッジを検出しやすくする
+		new_c = translateRGB.ToneCurve(c, w, h);
+		*/
 		
-		c = translateRGB.ToneCurve(c, w, h);
 		/*カラー画像をグレイ化する*/
-		c = translateRGB.ToGlay(c,w,h);
+		new_c = translateRGB.ToGlay(new_c,w,h);
 	
-		/*エッジ検出*/
-		c = CreateLine.sobelFilter(c,w,h);
+		/*エッジ検出
+		new_c = CreateLine.sobelFilter(new_c,w,h);
+		*/
 		
-		htf = new HoughTransform();
-		new_c = htf.run(c, w, h);
-		
-		new_c = c;
-		//計算結果をセットする
-		new_img.setRGB( 0,0, w, h, new_c, 0, w ); 
+		/*円を検出
+		htf = new HoughTransformCircles();
+		htf.run(new_c, w, h);
+		*/
 	}
 	
 	
@@ -83,16 +78,17 @@ public class ObjectDetection extends Applet{
 	}
 	
 	public void paint(Graphics g){
-		int x,y,r;
-		g.drawImage(new_img, 0, 0, this);
-		g.setColor(Color.red);
+		int x,y;
+		g.drawImage(img, 0, 0, this);
 		
+		/*円検出の結果
+		g.setColor(Color.red);		
 		for(int i = 0;i <htf.OBJECT_NUM;i++){
 			x = htf.pre_c_x[i];
 			y = htf.pre_c_y[i];
-			r = htf.pre_r[i];
 			g.fillOval(x,y,5,5);
 		}
+		*/
 		
 	}
 }
